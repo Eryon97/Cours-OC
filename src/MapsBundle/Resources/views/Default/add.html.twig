@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+  <head>
+
+    <style>
+       #map {
+        height: 700px;
+        width: 100%;
+       }
+    </style>
+
+  </head>
+
+  <body>
+    <a href="{{ path('maps_add')}}"><button type="button" name="add">Add</button></a>
+    <a href="{{ path('maps_search')}}"><button type="button" name="search">Search</button></a>
+
+    <h3 style="text-align: center;">Carte Google Maps</h3>
+
+    <div id="map"></div>
+
+    {{ form_start(form) }}
+      {{ form_row(form.latitude) }}
+      {{ form_row(form.longitude) }}
+      {{ form_row(form.month) }}
+      {{ form_row(form.year) }}
+    {{ form_end(form) }}
+
+    <script>
+      var inputLatitude = document.getElementById("mapsbundle_visite_latitude");
+      var inputLongitude = document.getElementById("mapsbundle_visite_longitude");
+
+      function initMap() {
+        var France = { lat: 46.52863469527167, lng: 2.43896484375 };
+        var map = new google.maps.Map(document.getElementById('map'), {
+          zoom: 6,
+          center: France,
+          mapTypeId: 'hybrid'
+        });
+        map.addListener('click', function(e) {
+          placeMarker(e.latLng, map);
+        });
+      }
+
+      var marker;
+      function placeMarker(latLng, map) {
+        if(marker) {
+          marker.setPosition(latLng);
+        }else{
+          marker = new google.maps.Marker({
+            position: latLng,
+            map: map
+          });
+        }
+        map.panTo(latLng);
+        inputLatitude.value = latLng.lat();
+        inputLongitude.value = latLng.lng();
+      }
+    </script>
+
+    <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCDwjyiE5EGvQcAaJPNkxATWhrxBUsb11A&callback=initMap">
+    </script>
+
+  </body>
+</html>

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+       #map {
+        height: 700px;
+        width: 100%;
+       }
+    </style>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script> <!-- On ajoute le script de JQuery -->
+  </head>
+
+  <body>
+    <a href="{{ path('maps_add')}}"><button type="button" name="add">Add</button></a>
+    <a href="{{ path('maps_search')}}"><button type="button" name="search">Search</button></a>
+
+    <h3 style="text-align: center;">Resultats</h3>
+
+    <div id="map"></div>
+
+    <div id="coordonnees" class="hidden"> <!-- on place une div qui sera caché à l'écran -->
+      {% for visite in visites %} <!-- On boucle chaque visite de la liste visites -->
+        <div data-latitude="{{ visite.latitude }}"
+             data-longitude="{{ visite.longitude }}"
+             data-month="{{ visite.month }}"
+             data-year="{{ visite.year }}"> <!-- On place les valeurs dans des data pour les recuperer plus tard -->
+        </div>
+      {% endfor %}
+    </div>
+
+    <script>
+
+      var resultArray = (function getGeoDataArray() {
+        var $coords = $('#coordonnees').find('div'); //On recupere la div ayant pour id coordonnees
+        var resultsArray = []; //On creer un tableau resultArray
+        for (var i = 0; i < $coords.length; i++) { //on creer une boucle pour chaque visite
+            var lat = $($coords[i]).data('latitude'); //on recupere la valeur du data-latitude
+            var lng = $($coords[i]).data('longitude'); //on recupere la valeur du data-longitude
+
+            var coord = [lat, lng]; //on place les coordonnees dans un tableau
+            resultsArray.push(coord); //on envoie les coordonnees de la visite dans le tableau resultArray
+        }
+        return resultsArray; //On retourne le resultArray pour l'utiliser plus tard
+      })();
+
+      function initMap() {
+        var France = { lat: 46.52863469527167, lng: 2.43896484375 };
+        var map = new google.maps.Map(document.getElementById('map'), {
+          zoom: 6,
+          center: France,
+          mapTypeId: 'hybrid'
+        });
+        placeMarker(map); //Plus besoin du Listener, on lance la fonction tout simplement
+      }
+
+      function placeMarker(map) {
+        for (var i = 0; i < resultArray.length; i++) { //Boucle pour chaque visite
+          var result = resultArray[i]; //On recupere la visite
+          var marker = new google.maps.Marker({ //On place le marker
+              position: {lat: result[0], lng: result[1]},
+              map: map,
+          });
+        }
+      }
+    </script>
+
+    <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCDwjyiE5EGvQcAaJPNkxATWhrxBUsb11A&callback=initMap">
+    </script>
+
+  </body>
+</html>

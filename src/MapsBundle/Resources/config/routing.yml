@@ -1,3 +1,15 @@
 maps_home:
   path: /maps
   defaults: { _controller: MapsBundle:Default:index }
+
+maps_add:
+  path: /maps/add
+  defaults: { _controller: MapsBundle:Default:addVisite }
+
+maps_search:
+  path: /maps/search
+  defaults: { _controller: MapsBundle:Default:search }
+
+maps_results:
+  path: /maps/results
+  defaults: { _controller: MapsBundle:Default:results }

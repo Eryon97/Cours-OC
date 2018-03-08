@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+  <head>
+
+  </head>
+
+  <body>
+    <a href="{{ path('maps_add')}}"><button type="button" name="add">Add</button></a>
+    <a href="{{ path('maps_search')}}"><button type="button" name="search">Search</button></a>
+
+    <h3 style="text-align: center;">Formulaire de recherche</h3>
+
+    {{ form_start(form) }}
+      {{ form_row(form.month) }}
+      {{ form_row(form.year) }}
+      {{ form_row(form.submit) }}
+    {{ form_end(form) }}
+
+
+  </body>
+</html>
