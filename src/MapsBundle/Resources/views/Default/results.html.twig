@@ -29,7 +29,7 @@
     </div>
 
     <script>
-
+      var markers = [];
       var resultArray = (function getGeoDataArray() {
         var $coords = $('#coordonnees').find('div'); //On recupere la div ayant pour id coordonnees
         var resultsArray = []; //On creer un tableau resultArray
@@ -51,6 +51,8 @@
           mapTypeId: 'hybrid'
         });
         placeMarker(map); //Plus besoin du Listener, on lance la fonction tout simplement
+        var markerCluster = new MarkerClusterer(map, markers,
+          {imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'});
       }
 
       function placeMarker(map) {
@@ -60,8 +62,12 @@
               position: {lat: result[0], lng: result[1]},
               map: map,
           });
+          markers.push(marker);
         }
       }
+    </script>
+
+    <script src="https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js">
     </script>
 
     <script async defer

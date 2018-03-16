@@ -16,6 +16,8 @@
 
     <div id="map"></div>
 
+    <p id="geocode"></p>
+
     <script>
       var Paris = [48.866667, 2.333333, 2244445];
       var Lyon = [45.764043, 4.835659, 484344];
@@ -31,23 +33,38 @@
           center: France,
           mapTypeId: 'hybrid'
         });
+        var geocoder = new google.maps.Geocoder;
         map.addListener('click', function(e) {
-          placeMarker(e.latLng, map);
+          placeMarker(geocoder, e.latLng, map);
         });
-        circles(map);
       }
 
       var marker;
-      function placeMarker(latLng, map) {
-        if(marker) {
-          marker.setPosition(latLng);
-        }else{
-          marker = new google.maps.Marker({
-            position: latLng,
-            map: map
-          });
-        }
-        map.panTo(latLng);
+      var geocode = document.getElementById('geocode');
+      function placeMarker(geocoder, latLng, map) {
+        var latlng = {lat: latLng.lat(), lng: latLng.lng()};
+        geocoder.geocode({'location': latlng}, function(results, status) {
+          if (status === 'OK') {
+            if (results[0]) {
+              if(marker) {
+                marker.setPosition(latLng);
+              }else{
+                 marker = new google.maps.Marker({
+                  position: latLng,
+                  map: map
+                });
+              }
+              map.panTo(latLng);
+              var address = (results[4].formatted_address +
+              " (long: " + latLng.lng() + ", lat: " + latLng.lat() + ")");
+              geocode.textContent = address;
+            } else {
+              window.alert('No results found');
+            }
+          } else {
+            window.alert('Geocoder failed due to: ' + status);
+          }
+        });
       }
 
       function circles(map) {
